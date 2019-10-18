@@ -13,16 +13,18 @@ namespace GameFramework
         private List<Entity> _entities = new List<Entity>();
         private int _sizeX;
         private int _sizeY;
+        //Create the collision grid
+        private bool[,] _collision;
 
-        public Scene()
+        public Scene() : this(24,6)
         {
-            _sizeX = 12;
-            _sizeY = 3;
+           
         }
         public Scene(int sizeX, int sizeY)
         {
             _sizeX = sizeX;
             _sizeY = sizeY;
+            _collision = new bool[_sizeX, _sizeY];
         }
 
         public int SizeX
@@ -51,9 +53,23 @@ namespace GameFramework
 
         public void Update()
         {
+            //Clear the collision grid
+            _collision = new bool[_sizeX, _sizeY];           
+
             foreach(Entity e in _entities)
             {
                 e.Update();
+
+                //Set the Entity's collision in the collision grid
+                int x = (int)e.X;
+                int y = (int)e.Y;
+                if(e.X>= 0 && e.Y < _sizeY && e.Y >= 0 && e.X < _sizeX)
+                {
+                    if(!_collision[x,y])
+                    {
+                        _collision[x, y] = e.Solid;
+                    }
+                }
             }
         }
 
@@ -70,13 +86,13 @@ namespace GameFramework
                 e.Draw();
 
                 //Position each Entity's icon in the display
-                if (e.X >= 0 && e.X < _sizeX && e.Y >=0 && e.Y < _sizeY)
+                if (e.X >= 0 && e.X < _sizeX && e.Y >= 0 && e.Y < _sizeY)
                 {
-                    display[e.X, e.Y] = e.Icon;
+                    display[(int)e.X, (int)e.Y] = e.Icon;
                 }
-                
-            }            
-            for(int y = 0; y<_sizeY; y++)
+
+            }
+            for (int y = 0; y<_sizeY; y++)
             {
                 for(int x = 0; x < _sizeX; x++)
                 {
@@ -108,6 +124,16 @@ namespace GameFramework
                 e.TheScene = null;
             }
             _entities.Clear();
+        }
+
+        //Returns whither there is a solid Entity at the point
+        public bool GetCollision(float x, float y)
+        {
+            if(x >= 0 && y <= 0 && x < _sizeX && y < _sizeY)
+            {
+                return _collision[(int)x, (int)y];
+            }
+            return false;
         }
     }
 }

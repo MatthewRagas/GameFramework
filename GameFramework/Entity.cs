@@ -14,12 +14,37 @@ namespace GameFramework
 
         public Event OnStart;
         public Event OnUpdate;
-        public Event OnDraw;        
+        public Event OnDraw;
 
+
+        private Vector2 _location = new Vector2();
         public char Icon { get; set; } = ' ';
-        public int X { get; set; } = 0;
+        public bool Solid { get; set; } = false;
 
-        public int Y { get; set; } = 0;
+        public float X
+        {
+            get
+            {
+                return _location._x;
+            }
+            set
+            {
+                _location._x = value;
+            }
+        }
+
+
+        public float Y
+        {
+            get
+            {
+                return _location._y;
+            }
+            set
+            {
+                _location._y = value;
+            }
+        }
 
         private Scene _scene;
         public Scene TheScene

@@ -29,7 +29,7 @@ namespace GameFramework
 
         private void MoveRight()
         {
-            if(X < TheScene.SizeX-1)
+            if(X < TheScene.SizeX-1 || !TheScene.GetCollision(X + 1, Y))
             {
                 X++;
             }
@@ -47,7 +47,7 @@ namespace GameFramework
 
         private void MoveUp()
         {
-            if(Y>0)
+            if (Y >= 0 || !TheScene.GetCollision(X, Y - 1))
             {
                 Y--;
             }
@@ -55,7 +55,7 @@ namespace GameFramework
 
         private void MoveDown()
         {
-            if(Y <= TheScene.SizeY - 1)
+            if(Y < TheScene.SizeY || !TheScene.GetCollision(X, Y + 1))
             {
                 Y++;
             }
