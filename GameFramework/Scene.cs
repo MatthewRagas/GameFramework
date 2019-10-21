@@ -16,7 +16,7 @@ namespace GameFramework
         //Create the collision grid
         private bool[,] _collision;
 
-        public Scene() : this(24,6)
+        public Scene() : this(12,6)
         {
            
         }
@@ -129,7 +129,7 @@ namespace GameFramework
         //Returns whither there is a solid Entity at the point
         public bool GetCollision(float x, float y)
         {
-            if(x >= 0 && y <= 0 && x < _sizeX && y < _sizeY)
+            if(x >= 0 && y >= 0 && x < _sizeX && y < _sizeY)
             {
                 return _collision[(int)x, (int)y];
             }

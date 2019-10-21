@@ -11,7 +11,7 @@ namespace GameFramework
         //Whether or not the game should finish running and exit
         public static bool gameOver = false;
 
-        private Scene _currentScene;
+        private static Scene _currentScene;
         public Game()
         {
             _currentScene = new Scene();            
@@ -22,25 +22,52 @@ namespace GameFramework
 
         }
 
-        public void Run()
+        private void Init()
         {
-           _currentScene.AddEntity(new Wall(0,0));
-            _currentScene.AddEntity(new Wall(1,0));
-            _currentScene.AddEntity(new Wall(2,0));
-            _currentScene.AddEntity(new Wall(3,0));
-            _currentScene.AddEntity(new Wall(4,0));
-            _currentScene.AddEntity(new Wall(5,0));
+            Room startingRoom = new Room();
+            Room northRoom = new Room();
+            Room southRoom = new Room();
+            Room eastRoom = new Room();
+            Room westRoom = new Room();
 
+            startingRoom.North = northRoom;
+            startingRoom.South = southRoom;
+            startingRoom.East = eastRoom;
+            startingRoom.West = westRoom;
+
+            //northRoom.South = startingRoom;
+
+            //southRoom.North = startingRoom;
+
+            //eastRoom.West = startingRoom;
+
+            //westRoom.East = startingRoom;
+
+            //Add walls to starting room
+            startingRoom.AddEntity(new Wall(0, 0));
+            startingRoom.AddEntity(new Wall(1, 1));
+            startingRoom.AddEntity(new Wall(2, 1));
+            startingRoom.AddEntity(new Wall(3, 2));
+            startingRoom.AddEntity(new Wall(4, 3));
+            startingRoom.AddEntity(new Wall(5, 4));
+            //Create Player and position it
             Player player = new Player('@');
             player.X = 0;
             player.Y = 0;
 
             Entity enemy = new Entity('e');
-            enemy.X = 0;
-            enemy.Y = 0;       
+            enemy.X = 1;
+            enemy.Y = 1;
 
-            _currentScene.AddEntity(player);
-            _currentScene.AddEntity(enemy);
+            startingRoom.AddEntity(player);
+            northRoom.AddEntity(enemy);
+
+            _currentScene = startingRoom;
+        }
+
+        public void Run()
+        {
+            Init();            
 
             _currentScene.Start();
 
@@ -53,11 +80,15 @@ namespace GameFramework
             }
         }
 
-        public Scene CurrenScene
+        public static Scene CurrentScene
         {
             get
             {
                 return _currentScene;
+            }
+            set
+            {
+                _currentScene = value;
             }
         }
     }

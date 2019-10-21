@@ -24,12 +24,24 @@ namespace GameFramework
             PlayerInput.AddKeyEvent(MoveUp, ConsoleKey.UpArrow);
 
             PlayerInput.AddKeyEvent(MoveDown, ConsoleKey.DownArrow);
+
+            PlayerInput.AddKeyEvent(Exit, ConsoleKey.Escape);
+         
         }
 
 
         private void MoveRight()
         {
-            if(X < TheScene.SizeX-1 || !TheScene.GetCollision(X + 1, Y))
+            if (X + 1 > TheScene.SizeX)
+            {
+               if (TheScene is Room)
+               {
+                   Room dest = (Room)TheScene;
+                   Travel(dest.East);
+               }
+                   X = 0;
+            }                        
+            else if(!TheScene.GetCollision(X + 1, Y))
             {
                 X++;
             }
@@ -38,7 +50,16 @@ namespace GameFramework
        
         private void MoveLeft()
         {
-            if(X>0)
+            if (X - 1 < 0)
+            {
+                if (TheScene is Room)
+                {
+                    Room dest = (Room)TheScene;
+                    Travel(dest.West);
+                }
+                X = TheScene.SizeX - 1;
+            }
+            else if (!TheScene.GetCollision(X - 1, Y))
             {
                 X--;
             }
@@ -47,7 +68,16 @@ namespace GameFramework
 
         private void MoveUp()
         {
-            if (Y >= 0 || !TheScene.GetCollision(X, Y - 1))
+            if(Y - 1 < 0)
+            {
+                if(TheScene is Room)
+                {
+                    Room dest = (Room)TheScene;
+                    Travel(dest.North);
+                }
+                Y = TheScene.SizeY - 1;
+            }
+            else if (!TheScene.GetCollision(X, Y - 1))
             {
                 Y--;
             }
@@ -55,10 +85,37 @@ namespace GameFramework
 
         private void MoveDown()
         {
-            if(Y < TheScene.SizeY || !TheScene.GetCollision(X, Y + 1))
+            if (Y + 1 > TheScene.SizeY)
+            {
+                if (TheScene is Room)
+                {
+                    Room dest = (Room)TheScene;
+                    Travel(dest.South);
+                }
+                Y = 0;
+            }
+            else if (!TheScene.GetCollision(X, Y + 1))
             {
                 Y++;
             }
+        }
+
+        private void Exit()
+        {
+            Game.gameOver = true;
+        }
+        
+        //Move the Player to the destination room and change the Scene
+        private void Travel(Room destination)
+        {
+            if(destination == null)
+            {
+                return;
+            }
+
+            TheScene.RemoveEntity(this);
+            destination.AddEntity(this);
+            Game.CurrentScene = destination;
         }
     }
 }
