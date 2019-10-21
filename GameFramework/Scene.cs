@@ -10,11 +10,17 @@ namespace GameFramework
     //Class Scene is responsible for updating Entities
     class Scene
     {
+        public Event OnStart;
+        public Event OnUpdate;
+        public Event OnDraw;
+
         private List<Entity> _entities = new List<Entity>();
         private int _sizeX;
         private int _sizeY;
         //Create the collision grid
         private bool[,] _collision;
+
+        private List<Entity>[,] _tracking;
 
         public Scene() : this(12,6)
         {
@@ -49,12 +55,23 @@ namespace GameFramework
             {
                 e.Start();
             }
+            OnStart?.Invoke();
         }
 
         public void Update()
         {
             //Clear the collision grid
-            _collision = new bool[_sizeX, _sizeY];           
+            _collision = new bool[_sizeX, _sizeY];
+            //Clear the tracking grid
+            _tracking = new List<Entity>[_sizeX, _sizeY];
+            for(int y = 0; y < _sizeY; y++)
+            {
+                for(int x = 0; 0 < _sizeX; x++)
+                {
+                    _tracking[x, y] = new List<Entity>();
+                }
+                
+            }
 
             foreach(Entity e in _entities)
             {
@@ -65,12 +82,15 @@ namespace GameFramework
                 int y = (int)e.Y;
                 if(e.X>= 0 && e.Y < _sizeY && e.Y >= 0 && e.X < _sizeX)
                 {
+
+                    _tracking[x, y].Add(e);
                     if(!_collision[x,y])
                     {
                         _collision[x, y] = e.Solid;
                     }
                 }
             }
+            OnUpdate?.Invoke();
         }
 
         public void Draw()
@@ -100,6 +120,7 @@ namespace GameFramework
                 }
                 Console.WriteLine();
             }
+            OnDraw?.Invoke();
         }
 
         //Add an entity
@@ -134,6 +155,15 @@ namespace GameFramework
                 return _collision[(int)x, (int)y];
             }
             return false;
+        }
+
+        public List<Entity> GetEntities(float x, float y)
+        {
+            if (x >= 0 && y >= 0 && x < _sizeX && y < _sizeY)
+            {
+                return _tracking[(int)x, (int)y];
+            }
+            return new List<Entity>();
         }
     }
 }

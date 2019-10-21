@@ -5,9 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GameFramework
-{
-    class Room : Scene
+{    
+    enum Direction
     {
+        North,
+        South,
+        East,
+        West
+    }
+
+    class Room : Scene
+    {        
+
         private Room _north;
         private Room _south;
         private Room _east;
