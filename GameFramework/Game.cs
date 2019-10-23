@@ -10,6 +10,9 @@ namespace GameFramework
 {
     class Game
     {
+        //The tile size of the game
+        public static readonly int SizeX = 16;
+        public static readonly int SizeY = 16;
         //Whether or not the game should finish running and exit
         public static bool gameOver = false;
 

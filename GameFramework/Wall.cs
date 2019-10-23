@@ -12,8 +12,11 @@ namespace GameFramework
         {
             X = x;
             Y = y;
-            Solid = true;
-            Icon = '█';
+            Solid = true;            
+        }
+        public Wall(char icon, string imageName) : base('█', "emboss-lighted-texture.png")
+        {
+
         }
     }
 }
