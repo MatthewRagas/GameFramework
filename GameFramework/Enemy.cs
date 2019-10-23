@@ -19,6 +19,7 @@ namespace GameFramework
         {
             _facing = Direction.North;
             OnUpdate += Move;
+            OnUpdate += TouchPlayer;
         }
 
         public void Move()

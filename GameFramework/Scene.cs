@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Raylib;
+using RL = Raylib.Raylib;
 
 namespace GameFramework
 {
@@ -14,7 +16,10 @@ namespace GameFramework
         public Event OnUpdate;
         public Event OnDraw;
 
+
+        private List<Entity> _removals = new List<Entity>();
         private List<Entity> _entities = new List<Entity>();
+
         private int _sizeX;
         private int _sizeY;
         //Create the collision grid
@@ -31,6 +36,7 @@ namespace GameFramework
             _sizeX = sizeX;
             _sizeY = sizeY;
             _collision = new bool[_sizeX, _sizeY];
+            _tracking = new List<Entity>[_sizeX, _sizeY];
         }
 
         public int SizeX
@@ -51,50 +57,65 @@ namespace GameFramework
 
         public void Start()
         {
+            OnStart?.Invoke();
+
             foreach(Entity e in _entities)
             {
                 e.Start();
-            }
-            OnStart?.Invoke();
+            }            
         }
 
         public void Update()
         {
+            OnUpdate?.Invoke();
+
             //Clear the collision grid
             _collision = new bool[_sizeX, _sizeY];
-            //Clear the tracking grid
-            _tracking = new List<Entity>[_sizeX, _sizeY];
+
+            //Clear the tracking grid            
             for(int y = 0; y < _sizeY; y++)
             {
-                for(int x = 0; 0 < _sizeX; x++)
+                for(int x = 0; x < _sizeX; x++)
                 {
                     _tracking[x, y] = new List<Entity>();
                 }
                 
             }
 
-            foreach(Entity e in _entities)
+            foreach(Entity e in _removals)
             {
-                e.Update();
+                //Remove e from _entities
+                _entities.Remove(e);
+            }
+            _removals.Clear();
 
+            foreach(Entity e in _entities)
+            {                
                 //Set the Entity's collision in the collision grid
                 int x = (int)e.X;
                 int y = (int)e.Y;
-                if(e.X>= 0 && e.Y < _sizeY && e.Y >= 0 && e.X < _sizeX)
+                if(x>= 0 && y < _sizeY && y >= 0 && x < _sizeX)
                 {
-
+                    //Add the entity to the tracking grid
                     _tracking[x, y].Add(e);
+                    //Only update this point in the grid if the Entity is solid
                     if(!_collision[x,y])
                     {
                         _collision[x, y] = e.Solid;
                     }
                 }
             }
-            OnUpdate?.Invoke();
+
+            foreach (Entity e in _entities)
+            {
+                //Call the Entity's Update events
+                e.Update();
+            }            
         }
 
         public void Draw()
         {
+            OnDraw?.Invoke();
 
             //Clear the screen
             Console.Clear();
@@ -103,24 +124,35 @@ namespace GameFramework
 
             foreach (Entity e in _entities)
             {
-                e.Draw();
-
+                int x = (int)e.X;
+                int y = (int)e.Y;
                 //Position each Entity's icon in the display
-                if (e.X >= 0 && e.X < _sizeX && e.Y >= 0 && e.Y < _sizeY)
+                if (x >= 0 && x < _sizeX && y >= 0 && y < _sizeY)
                 {
-                    display[(int)e.X, (int)e.Y] = e.Icon;
+                    display[x, y] = e.Icon;
                 }
 
             }
+
+            //Render the display grid to the screen
             for (int y = 0; y<_sizeY; y++)
             {
                 for(int x = 0; x < _sizeX; x++)
                 {
                     Console.Write(display[x, y]);
+
+                    foreach (Entity e in _tracking[x,y])
+                    {
+                        RL.DrawTexture(e.Sprite, x * 16, y * 16, Color.WHITE);
+                    }
                 }
                 Console.WriteLine();
             }
-            OnDraw?.Invoke();
+
+            foreach (Entity e in _entities)
+            {
+                e.Draw();
+            }            
         }
 
         //Add an entity
@@ -133,7 +165,8 @@ namespace GameFramework
         //Remove an entity
         public void RemoveEntity(Entity entity)
         {
-            _entities.Remove(entity);
+            //Ready the Entity for removal
+            _removals.Add(entity);
             entity.TheScene = null;
         }
 
@@ -142,9 +175,8 @@ namespace GameFramework
         {
             foreach(Entity e in _entities)
             {
-                e.TheScene = null;
-            }
-            _entities.Clear();
+                RemoveEntity(e);
+            }            
         }
 
         //Returns whither there is a solid Entity at the point
@@ -163,7 +195,10 @@ namespace GameFramework
             {
                 return _tracking[(int)x, (int)y];
             }
-            return new List<Entity>();
+            else
+            {
+                return new List<Entity>();
+            }            
         }
     }
 }

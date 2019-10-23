@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GameFramework
 {
     class Player : Entity
@@ -13,21 +14,24 @@ namespace GameFramework
 
         }
 
+        public Player(string imageName) : base('@',imageName)
+        {
+            //Bind movement methods to the arrowkeys
+            PlayerInput.AddKeyEvent(MoveRight, 100);//d
+            PlayerInput.AddKeyEvent(MoveLeft, 97);//a
+            PlayerInput.AddKeyEvent(MoveUp, 119);//w
+            PlayerInput.AddKeyEvent(MoveDown, 115);//s            
+        }
+
         public Player(char icon) : base(icon)
         {
            
-            PlayerInput.AddKeyEvent(MoveRight, ConsoleKey.RightArrow);
-
-
-            PlayerInput.AddKeyEvent(MoveLeft, ConsoleKey.LeftArrow);
-
-            PlayerInput.AddKeyEvent(MoveUp, ConsoleKey.UpArrow);
-
-            PlayerInput.AddKeyEvent(MoveDown, ConsoleKey.DownArrow);
-
-            PlayerInput.AddKeyEvent(Exit, ConsoleKey.Escape);
-         
+            PlayerInput.AddKeyEvent(MoveRight, 100);//d
+            PlayerInput.AddKeyEvent(MoveLeft,97);//a
+            PlayerInput.AddKeyEvent(MoveUp, 119);//w
+            PlayerInput.AddKeyEvent(MoveDown, 115);//s                     
         }
+        
 
 
         private void MoveRight()
@@ -100,10 +104,10 @@ namespace GameFramework
             }
         }
 
-        private void Exit()
-        {
-            Game.gameOver = true;
-        }
+        //private void Exit()
+        //{
+        //    Game.gameOver = true;
+        //}
         
         //Move the Player to the destination room and change the Scene
         private void Travel(Room destination)

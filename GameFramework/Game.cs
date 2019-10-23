@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Raylib;
+using RL = Raylib.Raylib;
 
 namespace GameFramework
 {
@@ -14,22 +16,19 @@ namespace GameFramework
         private static Scene _currentScene;
         public Game()
         {
-            _currentScene = new Scene();            
-        }
-
-        public Game(Scene newScene)
-        {
-
-        }
+            RL.InitWindow(640, 480, "Shalom");
+            RL.SetTargetFPS(15);
+        }        
 
         private void Init()
         {
-            Room startingRoom = new Room();
-            Room northRoom = new Room();
-
+            Room startingRoom = new Room(8,6);
+            Room northRoom = new Room(12,6);
+            Enemy enemy = new Enemy();
             void StartNorthRoom()
             {
                 enemy.X = 4;
+                enemy.Y = 4;
             }
 
             northRoom.OnStart += StartNorthRoom;
@@ -37,6 +36,11 @@ namespace GameFramework
             Room southRoom = new Room();
             Room eastRoom = new Room();
             Room westRoom = new Room();
+
+            startingRoom.North = northRoom;
+            startingRoom.South = southRoom;
+            startingRoom.East = eastRoom;
+            startingRoom.West = westRoom;
 
             //West Room
             for (int i = 0; i < westRoom.SizeX; i++)
@@ -120,16 +124,12 @@ namespace GameFramework
                     startingRoom.AddEntity(new Wall(0, i));
                     startingRoom.AddEntity(new Wall(startingRoom.SizeX - 1, i));
                 }
-            }
-            startingRoom.North = northRoom;
-            startingRoom.South = southRoom;
-            startingRoom.East = eastRoom;
-            startingRoom.West = westRoom;
+            }            
 
             //Add walls to starting room
             
             //Create Player and position it in startingRoom
-            Player player = new Player('@');
+            Player player = new Player("survivor-idle_handgun_0.png");
             player.X = 4;
             player.Y = 4;           
 
@@ -148,10 +148,15 @@ namespace GameFramework
             _currentScene.Start();
 
             //Loop until game is over
-            while(!gameOver)
+            while(!gameOver && !RL.WindowShouldClose())
             {
                 _currentScene.Update();
+
+                RL.BeginDrawing();
+                RL.ClearBackground(Color.RED);
                 _currentScene.Draw();
+                RL.EndDrawing();
+
                 PlayerInput.ReadKey();
             }
         }
@@ -169,7 +174,7 @@ namespace GameFramework
             }
         }
 
-        private Enemy enemy = new Enemy();
+        
 
         
     }
