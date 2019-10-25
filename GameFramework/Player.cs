@@ -9,27 +9,31 @@ namespace GameFramework
 {
     class Player : Entity
     {
-        public Player() : base('@')
+
+        private PlayerInput _input = new PlayerInput();
+        public Player() : this('@', "survivor-idle_handgun_0.png")
         {
 
         }
 
-        public Player(string imageName) : base('@',imageName)
+        public Player(string imageName) : this('@',imageName)
         {
-            //Bind movement methods to the arrowkeys
-            PlayerInput.AddKeyEvent(MoveRight, 100);//d
-            PlayerInput.AddKeyEvent(MoveLeft, 97);//a
-            PlayerInput.AddKeyEvent(MoveUp, 119);//w
-            PlayerInput.AddKeyEvent(MoveDown, 115);//s            
+                       
         }
 
-        public Player(char icon) : base(icon)
+        public Player(char icon) : this(icon, "survivor-idle_handgun_0.png")
         {
-           
-            PlayerInput.AddKeyEvent(MoveRight, 100);//d
-            PlayerInput.AddKeyEvent(MoveLeft,97);//a
-            PlayerInput.AddKeyEvent(MoveUp, 119);//w
-            PlayerInput.AddKeyEvent(MoveDown, 115);//s                     
+                                         
+        }
+
+        public Player(char icon, string imageName) : base(icon, imageName)
+        {
+            _input.AddKeyEvent(MoveRight, 100);//d
+            _input.AddKeyEvent(MoveLeft, 97);//a
+            _input.AddKeyEvent(MoveUp, 119);//w
+            _input.AddKeyEvent(MoveDown, 115);//s 
+
+            OnUpdate += _input.ReadKey;
         }
         
 

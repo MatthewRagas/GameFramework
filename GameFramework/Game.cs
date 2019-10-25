@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using Raylib;
 using RL = Raylib.Raylib;
 
@@ -11,144 +12,38 @@ namespace GameFramework
     class Game
     {
         //The tile size of the game
-        public static readonly int SizeX = 16;
-        public static readonly int SizeY = 16;
+        public static readonly int SizeX = 34;
+        public static readonly int SizeY = 34;
         //Whether or not the game should finish running and exit
         public static bool gameOver = false;
 
         private static Scene _currentScene;
         public Game()
         {
-            RL.InitWindow(640, 480, "Shalom");
+            RL.InitWindow(800, 550, "Shalom");
             RL.SetTargetFPS(15);
         }        
 
         private void Init()
         {
-            Room startingRoom = new Room(8,6);
-            Room northRoom = new Room(12,6);
-            Enemy enemy = new Enemy();
-            void StartNorthRoom()
-            {
-                enemy.X = 4;
-                enemy.Y = 4;
-            }
+            Room startingRoom = LoadRoom("Rooms/StartingRoom.txt");
+            Room northRoom = LoadRoom("Rooms/northRoom.txt");           
 
-            northRoom.OnStart += StartNorthRoom;
-
-            Room southRoom = new Room();
-            Room eastRoom = new Room();
-            Room westRoom = new Room();
+            Room southRoom = LoadRoom("Rooms/southRoom.txt");
+            Room eastRoom = LoadRoom("Rooms/eastRoom.txt");
+            Room westRoom = LoadRoom("Rooms/westRoom.txt");
 
             startingRoom.North = northRoom;
             startingRoom.South = southRoom;
             startingRoom.East = eastRoom;
-            startingRoom.West = westRoom;
-
-            //West Room
-            for (int i = 0; i < westRoom.SizeX; i++)
-            {
-                if (i != 2)
-                {
-                    westRoom.AddEntity(new Wall(i, 0));
-                    westRoom.AddEntity(new Wall(i, startingRoom.SizeY - 1));
-                }
-            }
-            for (int i = 0; i < westRoom.SizeY; i++)
-            {
-                if (i != 2)
-                {
-                    westRoom.AddEntity(new Wall(0, i));
-                    westRoom.AddEntity(new Wall(westRoom.SizeX - 1, i));
-                }
-            }
-            //East Room
-            for (int i = 0; i < eastRoom.SizeX; i++)
-            {
-                if (i != 2)
-                {
-                    eastRoom.AddEntity(new Wall(i, 0));
-                    eastRoom.AddEntity(new Wall(i, eastRoom.SizeY - 1));
-                }
-            }
-            for (int i = 0; i < eastRoom.SizeY; i++)
-            {
-                if (i != 2)
-                {
-                    eastRoom.AddEntity(new Wall(0, i));
-                    eastRoom.AddEntity(new Wall(eastRoom.SizeX - 1, i));
-                }
-            }
-            //South Room
-            for (int i = 0; i < startingRoom.SizeX; i++)
-            {
-                if (i != 2)
-                {
-                    southRoom.AddEntity(new Wall(i, 0));
-                    southRoom.AddEntity(new Wall(i, southRoom.SizeY - 1));
-                }
-            }
-            for (int i = 0; i < southRoom.SizeY; i++)
-            {
-                if (i != 2)
-                {
-                    southRoom.AddEntity(new Wall(0, i));
-                    southRoom.AddEntity(new Wall(southRoom.SizeX - 1, i));
-                }
-            }
-            //North Room
-            for (int i = 0; i < northRoom.SizeX; i++)
-            {
-                if(i!=2)
-                {
-                    northRoom.AddEntity(new Wall(i, 0));
-                    northRoom.AddEntity(new Wall(i, startingRoom.SizeY - 1));
-                }
-            }
-            for (int i = 0; i < northRoom.SizeY; i++)
-            {
-                northRoom.AddEntity(new Wall(northRoom.SizeX - 1, i));
-                northRoom.AddEntity(new Wall(0, i));
-            }
-
-            //Starting Room
-            for (int i = 0; i < startingRoom.SizeX; i++)
-            {
-                if (i != 2)
-                {
-                    startingRoom.AddEntity(new Wall(i, 0));
-                    startingRoom.AddEntity(new Wall(i, startingRoom.SizeY - 1));
-                }
-            }
-            for(int i=0;i<startingRoom.SizeY;i++)
-            {
-                if(i!=2)
-                {
-                    startingRoom.AddEntity(new Wall(0, i));
-                    startingRoom.AddEntity(new Wall(startingRoom.SizeX - 1, i));
-                }
-            }            
-
-            //Add walls to starting room
-            
-            //Create Player and position it in startingRoom
-            Player player = new Player("survivor-idle_handgun_0.png");
-            player.X = 4;
-            player.Y = 4;           
-
-
-            startingRoom.AddEntity(player);
-            //Add enemy to northRoom
-            northRoom.AddEntity(enemy);
+            startingRoom.West = westRoom;            
 
             CurrentScene = startingRoom;
         }
 
         public void Run()
         {
-            Init();            
-
-            _currentScene.Start();
+            Init();
 
             //Loop until game is over
             while(!gameOver && !RL.WindowShouldClose())
@@ -158,10 +53,9 @@ namespace GameFramework
                 RL.BeginDrawing();
                 RL.ClearBackground(Color.RED);
                 _currentScene.Draw();
-                RL.EndDrawing();
-
-                PlayerInput.ReadKey();
+                RL.EndDrawing();                
             }
+            RL.CloseWindow();
         }
 
         public static Scene CurrentScene
@@ -177,8 +71,47 @@ namespace GameFramework
             }
         }
 
-        
+        private Room LoadRoom(string path)
+        {
+            StreamReader reader = new StreamReader(path);
 
-        
+            int width, height;
+            Int32.TryParse(reader.ReadLine(), out width);
+            Int32.TryParse(reader.ReadLine(), out height);
+
+            Room room = new Room(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                string row = reader.ReadLine();
+                for (int x = 0; x < width; x++)
+                {
+                    char tile = row[x];
+                    switch (tile)
+                    {
+                        case '1':
+                            room.AddEntity(new Wall(x, y));
+                            break;
+                        case '@':
+                            Player p = new Player();
+                            p.X = x;
+                            p.Y = y;
+                            room.AddEntity(p);
+                            break;
+                        case 'e':
+                            Enemy e = new Enemy();
+                            e.X = x;
+                            e.Y = y;
+                            room.AddEntity(e);
+                            break;
+
+                    }
+                }
+            }
+
+            return room;
+        }
+
+
     }
 }

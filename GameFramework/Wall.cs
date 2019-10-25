@@ -8,15 +8,11 @@ namespace GameFramework
 {
     class Wall : Entity
     {
-        public Wall(int x, int y)
+        public Wall(int x, int y) : base('█', "emboss-lighted-texture.png")
         {
             X = x;
             Y = y;
             Solid = true;            
-        }
-        public Wall(char icon, string imageName) : base('█', "emboss-lighted-texture.png")
-        {
-
         }
     }
 }

@@ -10,12 +10,22 @@ namespace GameFramework
     {
         private Direction _facing;
 
-        public Enemy() : this('E')
+        public Enemy() : this('e', "enemy.png")
         {
 
         }
 
-        public Enemy(char icon) : base(icon)
+        public Enemy(char icon) : this(icon, "enemy.png")
+        {
+           
+        }
+
+        public Enemy(string imageName) : this('e', imageName)
+        {
+
+        }
+
+        public Enemy(char icon, string imageName) : base(icon, imageName)
         {
             _facing = Direction.North;
             OnUpdate += Move;
