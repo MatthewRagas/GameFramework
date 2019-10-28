@@ -16,9 +16,12 @@ namespace GameFramework
         public Event OnUpdate;
         public Event OnDraw;
 
-
+        //The list of entities to remove from the scene
         private List<Entity> _removals = new List<Entity>();
+        //The list of entities in the scene
         private List<Entity> _entities = new List<Entity>();
+
+        private List<Entity> _additions = new List<Entity>();
 
         private int _sizeX;
         private int _sizeY;
@@ -82,6 +85,15 @@ namespace GameFramework
                 
             }
 
+            //Add all the Entities readied for addition
+            foreach (Entity e in _additions)
+            {
+                //Add e to _entities
+                _entities.Add(e);
+            }
+            _additions.Clear();
+
+            //Remove all the Entities readied for removal
             foreach(Entity e in _removals)
             {
                 //Remove e from _entities
@@ -94,6 +106,7 @@ namespace GameFramework
                 //Set the Entity's collision in the collision grid
                 int x = (int)e.X;
                 int y = (int)e.Y;
+                //Only update if the Entity is within bounds
                 if(x>= 0 && y < _sizeY && y >= 0 && x < _sizeX)
                 {
                     //Add the entity to the tracking grid
@@ -129,13 +142,13 @@ namespace GameFramework
                 //Position each Entity's icon in the display
                 if (x >= 0 && x < _sizeX && y >= 0 && y < _sizeY)
                 {
-                    display[x, y] = e.Icon;
+                    display[x, y] = e.Icon;                    
                 }
 
             }
 
             //Render the display grid to the screen
-            for (int y = 0; y<_sizeY; y++)
+            for (int y = 0; y < _sizeY; y++)
             {
                 for(int x = 0; x < _sizeX; x++)
                 {
@@ -143,7 +156,7 @@ namespace GameFramework
 
                     foreach (Entity e in _tracking[x,y])
                     {
-                        RL.DrawTexture(e.Sprite,x * Game.SizeX,  y *Game.SizeY, Color.WHITE);
+                        RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
                     }
                 }
                 Console.WriteLine();
@@ -158,7 +171,7 @@ namespace GameFramework
         //Add an entity
         public void AddEntity(Entity entity)
         {
-            _entities.Add(entity);
+            _additions.Add(entity);
             entity.TheScene = this;
         }
 
@@ -186,7 +199,10 @@ namespace GameFramework
             {
                 return _collision[(int)x, (int)y];
             }
-            return false;
+            else
+            {
+                return false;
+            }            
         }
 
         public List<Entity> GetEntities(float x, float y)

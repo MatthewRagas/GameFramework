@@ -9,6 +9,7 @@ namespace GameFramework
     class Enemy : Entity
     {
         private Direction _facing;
+        public float Speed { get; set; } = 0.5f;
 
         public Enemy() : this('e', "enemy.png")
         {
@@ -56,10 +57,11 @@ namespace GameFramework
         {
             if (!TheScene.GetCollision(X, Y - 1))
             {
-                Y--;
+                YVelocity = -Speed;
             }
             else
             {
+                YVelocity = 0f;
                 _facing = Direction.South;
             }
         }
@@ -68,10 +70,11 @@ namespace GameFramework
         {
             if (!TheScene.GetCollision(X, Y + 1))
             {
-                Y++;
+                YVelocity = Speed;
             }
             else
             {
+                YVelocity = 0f;
                 _facing = Direction.North;
             }
         }
@@ -80,10 +83,11 @@ namespace GameFramework
         {
             if (!TheScene.GetCollision(X - 1, Y))
             {
-                X--;
+                XVelocity = 0f;
             }
             else
             {
+                XVelocity = 0f;
                 _facing = Direction.East;
             }
         }
@@ -92,10 +96,11 @@ namespace GameFramework
         {
             if (!TheScene.GetCollision(X + 1, Y))
             {
-                X++;
+                XVelocity = 0f;
             }
             else
             {
+                XVelocity = 0f;
                 _facing = Direction.West;
             }
         }

@@ -40,7 +40,7 @@ namespace GameFramework
 
         private void MoveRight()
         {
-            if (X + 1 > TheScene.SizeX)
+            if (X + 1 >= TheScene.SizeX)
             {
                if (TheScene is Room)
                {
@@ -93,7 +93,7 @@ namespace GameFramework
 
         private void MoveDown()
         {
-            if (Y + 1 > TheScene.SizeY)
+            if (Y + 1 >= TheScene.SizeY)
             {
                 if (TheScene is Room)
                 {

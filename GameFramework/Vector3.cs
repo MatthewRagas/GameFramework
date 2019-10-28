@@ -21,7 +21,7 @@ namespace GameFramework
         {
             _x = x;
             _y = y;
-            _z = y;
+            _z = z;
         }
 
         //Vec3 + Vec3
@@ -58,6 +58,25 @@ namespace GameFramework
         public static Vector3 operator *(float num, Vector3 rhs)
         {
             return new Vector3(num * rhs._x, num * rhs._y, num * rhs._z);
+        }
+
+        public float Magnitude()
+        {
+            return (float)Math.Sqrt(_x * _x + _y * _y + _z * _z);
+        }
+
+        public float MagnitudeSqr()
+        {
+            return (_x * _x + _y * _y + _z * _z);
+        }
+
+        public float Distance(Vector3 other)
+        {
+            float diffX = _x - other._x;
+            float diffY = _y - other._y;
+            float diffZ = _z - other._z;
+
+            return (float) Math.Sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
         }
     }
 }

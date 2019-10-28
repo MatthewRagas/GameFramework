@@ -21,6 +21,23 @@ namespace GameFramework
             _x = x;
             _y = y;
         }
+        public float Magnitude()
+        {
+            return (float)Math.Sqrt(_x * _x + _y * _y);
+        }
+
+        public float MagnitudeSqr()
+        {
+            return (_x * _x + _y * _y);
+        }
+
+        public float Distance(Vector2 other)
+        {
+            float diffX = _x - other._x;
+            float diffY = _y - other._y;            
+
+            return (float)Math.Sqrt(diffX * diffX + diffY * diffY);
+        }
 
         //Vec2 + Vec2
         public static Vector2 operator +(Vector2 lhs, Vector2 rhs)
@@ -57,5 +74,7 @@ namespace GameFramework
         {
             return new Vector2(rhs._x * num, rhs._y * num);
         }
+
+       
     }
 }

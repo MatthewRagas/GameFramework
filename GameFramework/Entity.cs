@@ -18,8 +18,10 @@ namespace GameFramework
         public Event OnUpdate;
         public Event OnDraw;
 
-
+        //The location of the Entity
         private Vector2 _location = new Vector2();
+        //The velocity of the Entity
+        private Vector2 _velocity = new Vector2();
         public char Icon { get; set; } = ' ';
         //The image representing the Entity on the screen
         public Texture2D Sprite { get; set; }
@@ -37,6 +39,18 @@ namespace GameFramework
             }
         }
 
+        public float XVelocity
+        {
+            get
+            {
+                return _velocity._x;
+            }
+            set
+            {
+                _velocity._x = value;
+            }
+        }
+
 
         public float Y
         {
@@ -50,18 +64,19 @@ namespace GameFramework
             }
         }
 
-        private Scene _scene;
-        public Scene TheScene
+        public float YVelocity
         {
-            set
-            {
-                _scene = value;
-            }
             get
             {
-                return _scene;
+                return _velocity._y;
+            }
+            set
+            {
+                _velocity._y = value;
             }
         }
+        
+        public Scene TheScene { get; set; }                                                                                                                       
 
         public Entity()
         {
@@ -86,6 +101,7 @@ namespace GameFramework
 
         public void Update()
         {
+            _location += _velocity;
             OnUpdate?.Invoke();
         }
 

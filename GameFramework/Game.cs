@@ -18,11 +18,24 @@ namespace GameFramework
         public static bool gameOver = false;
 
         private static Scene _currentScene;
+        private static Scene _nextScene;
         public Game()
         {
             RL.InitWindow(800, 550, "Shalom");
             RL.SetTargetFPS(15);
-        }        
+        }
+
+        public static Scene CurrentScene
+        {
+            get
+            {
+                return _currentScene;
+            }
+            set
+            {
+                _nextScene = value;
+            }
+        }
 
         private void Init()
         {
@@ -39,7 +52,7 @@ namespace GameFramework
             startingRoom.West = westRoom;            
 
             CurrentScene = startingRoom;
-        }
+        }       
 
         public void Run()
         {
@@ -48,6 +61,12 @@ namespace GameFramework
             //Loop until game is over
             while(!gameOver && !RL.WindowShouldClose())
             {
+                if(_currentScene != _nextScene)
+                {
+                    _currentScene = _nextScene;
+                    _currentScene.Start();
+                }
+
                 _currentScene.Update();
 
                 RL.BeginDrawing();
@@ -56,20 +75,7 @@ namespace GameFramework
                 RL.EndDrawing();                
             }
             RL.CloseWindow();
-        }
-
-        public static Scene CurrentScene
-        {
-            get
-            {
-                return _currentScene;
-            }
-            set
-            {
-                _currentScene = value;
-                _currentScene.Start();
-            }
-        }
+        }       
 
         private Room LoadRoom(string path)
         {
@@ -111,7 +117,5 @@ namespace GameFramework
 
             return room;
         }
-
-
     }
 }
