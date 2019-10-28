@@ -75,6 +75,9 @@ namespace GameFramework
             return new Vector2(rhs._x * num, rhs._y * num);
         }
 
-       
+        public float DotProduct(Vector2 a, Vector2 b)
+        {
+            return (a._x * b._x + a._y * b._y);
+        }                
     }
 }

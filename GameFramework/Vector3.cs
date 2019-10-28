@@ -78,5 +78,17 @@ namespace GameFramework
 
             return (float) Math.Sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
         }
+
+        public float DotProduct(Vector3 a, Vector3 b)
+        {
+            return (a._x * b._x+ a._y * b._y + a._z * b._z);
+        }
+
+        public Vector3 CrossProduct(Vector3 a, Vector3 b)
+        {            
+            return new Vector3(a._y * b._z - a._z * b._y,//X
+                               a._z * b._x - a._x * b._z,//Y
+                               a._x * b._y - a._y * b._x);//Z
+        }
     }
 }
