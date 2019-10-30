@@ -78,6 +78,11 @@ namespace GameFramework
         public float DotProduct(Vector2 a, Vector2 b)
         {
             return (a._x * b._x + a._y * b._y);
-        }                
+        }     
+        
+        public float AngleBetween(Vector2 vec2)
+        {
+            return -DotProduct(this, vec2);
+        }
     }
 }

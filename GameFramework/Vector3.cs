@@ -24,6 +24,11 @@ namespace GameFramework
             _z = z;
         }
 
+        public override string ToString()
+        {
+            return "{" + _x + "," + _y + "," + _z + "}";
+        }
+
         //Vec3 + Vec3
         public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
         {
@@ -79,16 +84,36 @@ namespace GameFramework
             return (float) Math.Sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
         }
 
-        public float DotProduct(Vector3 a, Vector3 b)
+        public float DotProduct(Vector3 b)
         {
-            return (a._x * b._x+ a._y * b._y + a._z * b._z);
+            return (_x * b._x+ _y * b._y + _z * b._z);
         }
 
-        public Vector3 CrossProduct(Vector3 a, Vector3 b)
+        public Vector3 CrossProduct(Vector3 other)
         {            
-            return new Vector3(a._y * b._z - a._z * b._y,//X
-                               a._z * b._x - a._x * b._z,//Y
-                               a._x * b._y - a._y * b._x);//Z
+            return new Vector3(_y * other._z - _z * other._y,//X
+                               _z * other._x - _x * other._z,//Y
+                               _x * other._y - _y * other._x);//Z
+        }
+
+        public void Normalize()
+        {
+            float m = Magnitude();
+            _x /= m;
+            _y /= m;
+            _z /= m;
+        }
+        public Vector3 GetNormalised()
+        {
+            return(this / Magnitude());
+        }
+
+        public float AngleBetween(Vector3 other)
+        {
+            Vector3 a = GetNormalised();
+            Vector3 b = other.GetNormalised();            
+
+            return (float)Math.Acos(a.DotProduct(b));
         }
     }
 }
