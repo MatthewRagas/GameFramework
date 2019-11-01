@@ -80,6 +80,6 @@ namespace GameFramework
             float diffW = _w - other._w;
 
             return (float)Math.Sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ + diffW * diffW);
-        }
+        }        
     }
 }

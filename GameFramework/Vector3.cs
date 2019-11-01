@@ -114,6 +114,6 @@ namespace GameFramework
             Vector3 b = other.GetNormalised();            
 
             return (float)Math.Acos(a.DotProduct(b));
-        }
+        }       
     }
 }

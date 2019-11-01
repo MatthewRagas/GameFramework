@@ -83,6 +83,6 @@ namespace GameFramework
         public float AngleBetween(Vector2 vec2)
         {
             return -DotProduct(this, vec2);
-        }
+        }       
     }
 }

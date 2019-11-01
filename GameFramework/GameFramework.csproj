@@ -49,6 +49,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="Matrix2.cs" />
     <Compile Include="Matrix3.cs" />
+    <Compile Include="Matrix4.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerInput.cs" />
     <Compile Include="Program.cs" />

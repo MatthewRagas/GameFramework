@@ -26,6 +26,14 @@ namespace GameFramework
             this.m31 = 0; this.m32 = 0; this.m33 = 1;
         }
 
+        public Matrix3(Matrix3 matrix3)
+        {
+            m11 = matrix3.m11; m12 = matrix3.m12; m13 = matrix3.m13;
+            m21 = matrix3.m21; m22 = matrix3.m22; m23 = matrix3.m23;
+            m31 = matrix3.m31; m32 = matrix3.m32; m33 = matrix3.m33;
+        }
+
+
         public static Matrix3 operator *(Matrix3 lhs, Matrix3 rhs)
         {
             return new Matrix3(
@@ -55,6 +63,41 @@ namespace GameFramework
                 lhs.m11 * rhs._x + lhs.m12 * rhs._y + lhs.m13 * rhs._z,
                 lhs.m21 * rhs._x + lhs.m22 * rhs._y + lhs.m23 * rhs._z,
                 lhs.m31 * rhs._x + lhs.m32 * rhs._y + lhs.m33 * rhs._z);
+        }   
+        
+        public void SetScaled(Vector3 v)
+        {
+            m11 = v._x; m12 = 0; m13 = 0;
+            m21 = 0; m22 = v._y; m23 = 0;
+            m31 = 0; m32 = 0; m33 = v._z;
+        }
+
+        public void SetScaled(float x, float y, float z)
+        {
+            m11 = x; m12 = 0; m13 = 0;
+            m21 = 0; m22 = y; m23 = 0;
+            m31 = 0; m32 = 0; m33 = z;
+        }
+
+        public void Set(Matrix3 matrix3)
+        {
+            m11 = matrix3.m11; m12 = matrix3.m12; m13 = matrix3.m13;
+            m21 = matrix3.m21; m22 = matrix3.m22; m23 = matrix3.m23;
+            m31 = matrix3.m31; m32 = matrix3.m32; m33 = matrix3.m33;
+        }
+
+        void Scale(float x, float y, float z)
+        {
+            Matrix3 m = new Matrix3();
+            m.SetScaled(x, y, z);
+            Set(this * m);
+        }
+
+        void Scale(Vector3 v)
+        {
+            Matrix3 m = new Matrix3();
+            m.SetScaled(v._x, v._y, v._z);
+            Set(this * m);
         }
     }
 }
