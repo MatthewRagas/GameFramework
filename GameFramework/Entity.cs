@@ -99,6 +99,17 @@ namespace GameFramework
             }
         }
 
+        public float Rotation
+        {
+            get
+            {
+                return (float)Math.Atan2(_rotation.m12, _rotation.m11);
+            }
+            set
+            {
+                _rotation.RotateZ(value);
+            }
+        }
 
         public Scene TheScene { get; set; }                                                                                                                       
 

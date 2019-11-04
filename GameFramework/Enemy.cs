@@ -8,7 +8,7 @@ namespace GameFramework
 {
     class Enemy : Entity
     {
-        private Direction _facing;
+        private Direction _facing;        
         public float Speed { get; set; } = 0.5f;
 
         public Enemy() : this('e', "enemy.png")
@@ -30,7 +30,7 @@ namespace GameFramework
         {
             _facing = Direction.North;
             OnUpdate += Move;
-            OnUpdate += TouchPlayer;
+            OnUpdate += TouchPlayer;            
         }
 
         public void Move()
