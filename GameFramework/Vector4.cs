@@ -29,47 +29,71 @@ namespace GameFramework
         //Vec3 + Vec3
         public static Vector4 operator +(Vector4 lhs, Vector4 rhs)
         {
-            return new Vector4(lhs._x + rhs._x, lhs._y + rhs._y, lhs._z + rhs._z, lhs._w + rhs._w);
+            return new Vector4(
+                lhs._x + rhs._x, 
+                lhs._y + rhs._y, 
+                lhs._z + rhs._z, 
+                lhs._w + rhs._w);
         }
 
         //Vec3 - Vec3
         public static Vector4 operator -(Vector4 lhs, Vector4 rhs)
         {
-            return new Vector4(lhs._x - rhs._x, lhs._y - rhs._y, lhs._z - rhs._z, lhs._w - rhs._w);
+            return new Vector4(
+                lhs._x - rhs._x, 
+                lhs._y - rhs._y, 
+                lhs._z - rhs._z, 
+                lhs._w - rhs._w);
         }
 
         //Vec3 / float
         public static Vector4 operator /(Vector4 lhs, float num)
         {
-            return new Vector4(lhs._x / num, lhs._y / num, lhs._z / num, lhs._w / num);
+            return new Vector4(
+                lhs._x / num, 
+                lhs._y / num, 
+                lhs._z / num, 
+                lhs._w / num);
         }
 
         //float / Vec3
         public static Vector4 operator /(float num, Vector4 rhs)
         {
-            return new Vector4(num / rhs._x, num / rhs._y, num / rhs._z, num / rhs._w);
+            return new Vector4(
+                num / rhs._x, 
+                num / rhs._y, 
+                num / rhs._z, 
+                num / rhs._w);
         }
 
         //Vec3 * float
         public static Vector4 operator *(Vector4 lhs, float num)
         {
-            return new Vector4(lhs._x * num, lhs._y * num, lhs._z * num, lhs._w * num);
+            return new Vector4(
+                lhs._x * num, 
+                lhs._y * num, 
+                lhs._z * num, 
+                lhs._w * num);
         }
 
         //float * Vec3
         public static Vector4 operator *(float num, Vector4 rhs)
         {
-            return new Vector4(num * rhs._x, num * rhs._y, num * rhs._z, num * rhs._w);
+            return new Vector4(
+                num * rhs._x, 
+                num * rhs._y, 
+                num * rhs._z, 
+                num * rhs._w);
         }
 
-        public static float Magnitude(float x, float y, float z, float w)
+        public float Magnitude()
         {
-            return (float)Math.Sqrt(x * x + y * y + z * z + w * w);
+            return (float)Math.Sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
         }
 
-        public static float MagnitudeSqr(float x, float y, float z, float w)
+        public float MagnitudeSqr()
         {
-            return (x * x + y * y + z * z + w * w);
+            return (_x * _x + _y * _y + _z * _z + _w * _w);
         }
 
         public float Distance(Vector4 other)
@@ -80,6 +104,29 @@ namespace GameFramework
             float diffW = _w - other._w;
 
             return (float)Math.Sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ + diffW * diffW);
-        }        
+        }
+
+        public void Normalize()
+        {
+            float m = Magnitude();
+            _x /= m;
+            _y /= m;
+            _z /= m;
+            _w /= m;
+        }
+
+        public float DotProduct(Vector4 b)
+        {
+            return (_x * b._x + _y * b._y + _z * b._z + _w * b._w);
+        }
+
+        public Vector4 Cross(Vector4 rhs)
+        {
+            return new Vector4(
+           _y * rhs._z - _z * rhs._y,
+           _z * rhs._x - _x * rhs._z,
+           _x * rhs._y - _y * rhs._x,
+           0);
+        }
     }
 }

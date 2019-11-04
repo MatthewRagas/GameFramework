@@ -19,13 +19,19 @@ namespace GameFramework
         public Event OnDraw;
 
         //The location of the Entity
-        private Vector2 _location = new Vector2();
+        private Vector3 _location = new Vector3(0,0,1);
         //The velocity of the Entity
-        private Vector2 _velocity = new Vector2();
+        //private Vector2 _velocity = new Vector2();
+        //private Matrix3 _transform = new Matrix3();
+
+        private Matrix3 _translation = new Matrix3();
+        private Matrix3 _rotation = new Matrix3();
+        //private Matrix3 _scale = new Matrix3();
         public char Icon { get; set; } = ' ';
         //The image representing the Entity on the screen
         public Texture2D Sprite { get; set; }
         public bool Solid { get; set; } = false;
+        private float _scale = 1.0f;
 
         public float X
         {
@@ -43,11 +49,13 @@ namespace GameFramework
         {
             get
             {
-                return _velocity._x;
+                //return _velocity._x;
+                return _translation.m13;
             }
             set
             {
-                _velocity._x = value;
+                //_velocity._x = value;
+                _translation.SetTranslation(value, YVelocity, 1);
             }
         }
 
@@ -68,14 +76,30 @@ namespace GameFramework
         {
             get
             {
-                return _velocity._y;
+                //return _velocity._y;
+                return _translation.m23;
             }
             set
             {
-                _velocity._y = value;
+                //_velocity._y = value;
+                _translation.SetTranslation(XVelocity, value, 1);
             }
         }
         
+        public float Scale
+        {
+            get
+            {
+                //return _transform.m11;
+                return _scale;
+            }
+            set
+            {
+                _scale = value; ;
+            }
+        }
+
+
         public Scene TheScene { get; set; }                                                                                                                       
 
         public Entity()
@@ -101,7 +125,9 @@ namespace GameFramework
 
         public void Update()
         {
-            _location += _velocity;
+            //_location += _velocity;
+            Matrix3 transform = _translation * _rotation;
+            _location = transform * _location;
             OnUpdate?.Invoke();
         }
 

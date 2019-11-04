@@ -10,7 +10,9 @@ namespace GameFramework
     {
         static void Main(string[] args)
         {
-
+            //MatrixTest();
+            //Console.ReadKey();
+            //return;
             //Examples();                        
             Game game = new Game();
             game.Run();
@@ -72,6 +74,18 @@ namespace GameFramework
             {
                 Console.WriteLine("REEEEEEEEEEEEEEEE");
             }
+        }
+
+        static void MatrixTest()
+        {
+            Matrix3 a = new Matrix3(1, 4, 7, 2, 5, 8, 3, 6, 9);
+            Matrix3 b = new Matrix3(9, 6, 3, 8, 5, 2, 7, 4, 1);
+            Matrix3 c = a * b;
+            Console.WriteLine(c);
+
+            Console.WriteLine(c * new Vector3(2, 4, 6));
+
+            Console.WriteLine(a * new Matrix3());
         }
     }
 }
