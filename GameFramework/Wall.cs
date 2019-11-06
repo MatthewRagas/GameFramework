@@ -12,8 +12,10 @@ namespace GameFramework
         {
             X = x;
             Y = y;
+            OriginX = 4;
+            OriginY = 4;
             Solid = true;
-            OnUpdate += SPIN;
+            //OnUpdate += SPIN;
         }
 
         void SPIN()

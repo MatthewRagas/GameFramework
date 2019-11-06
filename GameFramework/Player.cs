@@ -34,9 +34,16 @@ namespace GameFramework
             _input.AddKeyEvent(MoveDown, 115);//s 
 
             OnUpdate += _input.ReadKey;
+            OnUpdate += Orbit;
         }
         
-
+        private void Orbit()
+        {
+            foreach(Entity child in _children)
+            {
+                child.Rotate(1.0f);
+            }
+        }
 
         private void MoveRight()
         {

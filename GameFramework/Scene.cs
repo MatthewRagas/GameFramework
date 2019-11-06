@@ -104,8 +104,8 @@ namespace GameFramework
             foreach(Entity e in _entities)
             {                
                 //Set the Entity's collision in the collision grid
-                int x = (int)e.X;
-                int y = (int)e.Y;
+                int x = (int)e.XAbsolute;
+                int y = (int)e.YAbsolute;
                 //Only update if the Entity is within bounds
                 if(x>= 0 && y < _sizeY && y >= 0 && x < _sizeX)
                 {
@@ -137,8 +137,8 @@ namespace GameFramework
 
             foreach (Entity e in _entities)
             {
-                int x = (int)e.X;
-                int y = (int)e.Y;
+                int x = (int)e.XAbsolute;
+                int y = (int)e.YAbsolute;
                 //Position each Entity's icon in the display
                 if (x >= 0 && x < _sizeX && y >= 0 && y < _sizeY)
                 {
@@ -158,7 +158,7 @@ namespace GameFramework
                     {
                         //RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
                         Texture2D texture = e.Sprite;
-                        Raylib.Vector2 position = new Raylib.Vector2(e.X * Game.SizeX, e.Y * Game.SizeY);
+                        Raylib.Vector2 position = new Raylib.Vector2(e.XAbsolute * Game.SizeX - e.OriginX, e.YAbsolute * Game.SizeY - e.OriginY);
                         float rotation = e.Rotation * (float)(180.0f/Math.PI);
                         float scale = e.Size;
                         RL.DrawTextureEx(texture, position, rotation, scale, Color.WHITE);

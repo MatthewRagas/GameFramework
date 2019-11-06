@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Raylib;
 using RL = Raylib.Raylib;
+using System.Diagnostics;
 
 namespace GameFramework
 {
@@ -17,6 +18,10 @@ namespace GameFramework
         public Event OnStart;
         public Event OnUpdate;
         public Event OnDraw;
+
+
+        protected Entity _parent = null;
+        protected List<Entity> _children = new List<Entity>(); 
 
         //The location of the Entity
         //private Vector3 _location = new Vector3(0,0,1);
@@ -36,6 +41,10 @@ namespace GameFramework
         public bool Solid { get; set; } = false;
         //private float _scale = 1.0f;
 
+        //Entity's relative origin
+        public float OriginX { get; set; } = 0;
+        public float OriginY { get; set; } = 0;
+
         public float X
         {
             get
@@ -45,6 +54,15 @@ namespace GameFramework
             set
             {
                 _localTransform.SetTranslation(value,Y,1);
+                UpdateTransform();
+            }
+        }
+
+        public float XAbsolute
+        {
+            get
+            {
+                return _globalTransform.m13;
             }
         }
 
@@ -72,6 +90,15 @@ namespace GameFramework
             set
             {
                 _localTransform.SetTranslation(X,value,1);
+                UpdateTransform();
+            }
+        }
+
+        public float YAbsolute
+        {
+            get
+            {
+                return _globalTransform.m23;
             }
         }
 
@@ -116,7 +143,15 @@ namespace GameFramework
             //}
         }
 
-        public Scene TheScene { get; set; }                                                                                                                       
+        public Scene TheScene { get; set; }   
+        
+        public Entity Parent
+        {
+            get
+            {
+                return _parent;
+            }
+        }
 
         public Entity()
         {
@@ -134,14 +169,74 @@ namespace GameFramework
             Sprite = RL.LoadTexture(imageName);
         }
 
+        ~Entity()
+        {
+            if(_parent != null)
+            {
+                _parent.RemoveChild(this);
+            }
+
+            foreach (Entity e in _children)
+            {
+                e._parent = null;
+            }
+        }
+
+        public int GetChildCount()
+        {
+            return _children.Count;
+        }
+
+        public Entity GetChild(int index)
+        {
+            return _children[index];
+        }
+
+        public void AddChild(Entity child)
+        {
+            Debug.Assert(child._parent == null);
+
+            child._parent = this;
+
+            _children.Add(child);
+        }
+
+        public void RemoveChild(Entity child)
+        {            
+            bool isMyChild = _children.Remove(child);
+            if(isMyChild)
+            {
+                child._parent = null;
+            }
+        }
+
         public void Scale(float width, float height)
         {
             _localTransform.Scale(width, height, 1);
+            UpdateTransform();
         }
 
         public void Rotate(float radians)
         {
             _localTransform.RotateZ(radians);
+            UpdateTransform();
+        }
+
+        protected void UpdateTransform()
+        {
+            if(_parent != null)
+            {
+                _globalTransform = _parent._globalTransform * _localTransform;
+            }
+            else
+            {
+                _globalTransform = _localTransform;
+            }
+
+            foreach(Entity child in _children)
+            {
+                child.UpdateTransform();
+            }
         }
 
         public void Start()

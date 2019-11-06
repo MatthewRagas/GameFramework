@@ -103,6 +103,11 @@ namespace GameFramework
                             p.X = x;
                             p.Y = y;
                             room.AddEntity(p);
+                            Entity sword = new Entity('/', "sword0.png");
+                            p.AddChild(sword);
+                            sword.X += 0.5f;
+                            sword.Y += 0.5f;
+                            room.AddEntity(sword);
                             break;
                         case 'e':
                             Enemy e = new Enemy();
