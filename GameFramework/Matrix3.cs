@@ -103,7 +103,7 @@ namespace GameFramework
             m31 = matrix3.m31; m32 = matrix3.m32; m33 = matrix3.m33;
         }
 
-        void Scale(float x, float y, float z)
+        public void Scale(float x, float y, float z)
         {
             Matrix3 m = new Matrix3();
             m.SetScaled(x, y, z);

@@ -12,7 +12,14 @@ namespace GameFramework
         {
             X = x;
             Y = y;
-            Solid = true;            
+            Solid = true;
+            OnUpdate += SPIN;
+        }
+
+        void SPIN()
+        {
+            //Rotation = 0.01f;
+            Rotate(0.05f);
         }
     }
 }

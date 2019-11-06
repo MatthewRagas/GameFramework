@@ -159,8 +159,8 @@ namespace GameFramework
                         //RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
                         Texture2D texture = e.Sprite;
                         Raylib.Vector2 position = new Raylib.Vector2(e.X * Game.SizeX, e.Y * Game.SizeY);
-                        float rotation = 0.0f;
-                        float scale = e.Scale;
+                        float rotation = e.Rotation * (float)(180.0f/Math.PI);
+                        float scale = e.Size;
                         RL.DrawTextureEx(texture, position, rotation, scale, Color.WHITE);
                     }
                 }
