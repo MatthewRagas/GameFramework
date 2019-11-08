@@ -156,8 +156,12 @@ namespace GameFramework
 
                     foreach (Entity e in _tracking[x,y])
                     {
+                        if(e.Sprite == null)
+                        {
+                            continue;
+                        }
                         //RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
-                        Texture2D texture = e.Sprite;
+                        Texture2D texture = e.Sprite.Texture;
                         Raylib.Vector2 position = new Raylib.Vector2(e.XAbsolute * Game.SizeX - e.OriginX, e.YAbsolute * Game.SizeY - e.OriginY);
                         float rotation = e.Rotation * (float)(180.0f/Math.PI);
                         float scale = e.Size;

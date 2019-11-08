@@ -37,7 +37,7 @@ namespace GameFramework
 
         public char Icon { get; set; } = ' ';
         //The image representing the Entity on the screen
-        public Texture2D Sprite { get; set; }
+        public SpriteEntity Sprite { get; set; }
         public bool Solid { get; set; } = false;
         //private float _scale = 1.0f;
 
@@ -166,7 +166,9 @@ namespace GameFramework
         //Creates an Entity with the specified icon and image
         public Entity(char icon, string imageName) : this(icon)
         {
-            Sprite = RL.LoadTexture(imageName);
+            Sprite = new SpriteEntity();
+            Sprite.Load(imageName);
+            AddChild(Sprite);
         }
 
         ~Entity()

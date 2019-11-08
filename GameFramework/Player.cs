@@ -43,6 +43,8 @@ namespace GameFramework
             {
                 child.Rotate(1.0f);
             }
+
+            Rotate(0.5f);
         }
 
         private void MoveRight()
