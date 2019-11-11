@@ -12,8 +12,9 @@ namespace GameFramework
     class Game
     {
         //The tile size of the game
-        public static readonly int SizeX = 34;
-        public static readonly int SizeY = 34;
+        public static readonly Vector2 UnitSize = new Vector2(34, 34);
+        //public static readonly int UnitSizeX = 34;
+        //public static readonly int UnitSizeY = 34;
         //Whether or not the game should finish running and exit
         public static bool gameOver = false;
 
@@ -63,11 +64,15 @@ namespace GameFramework
             {
                 if(_currentScene != _nextScene)
                 {
-                    _currentScene = _nextScene;
-                    _currentScene.Start();
+                    _currentScene = _nextScene;                    
                 }
 
                 _currentScene.Update();
+
+                if (!_currentScene.Started)
+                {
+                    _currentScene.Start();
+                }                
 
                 RL.BeginDrawing();
                 RL.ClearBackground(Color.RED);
@@ -102,12 +107,9 @@ namespace GameFramework
                             Player p = new Player();
                             p.X = x;
                             p.Y = y;
+                            //p.Sprite.X -= 0.5f;
+                            //p.Sprite.Y -= 0.5f;
                             room.AddEntity(p);
-                            Entity sword = new Entity('/', "sword0.png");
-                            p.AddChild(sword);
-                            sword.X += 0.5f;
-                            sword.Y += 0.5f;
-                            room.AddEntity(sword);
                             break;
                         case 'e':
                             Enemy e = new Enemy();

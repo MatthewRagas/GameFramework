@@ -11,6 +11,7 @@ namespace GameFramework
     {
 
         private PlayerInput _input = new PlayerInput();
+        private Entity _sword = new Entity('/', "sword0.png");
         public Player() : this('@', "survivor-idle_handgun_0.png")
         {
 
@@ -32,9 +33,30 @@ namespace GameFramework
             _input.AddKeyEvent(MoveLeft, 97);//a
             _input.AddKeyEvent(MoveUp, 119);//w
             _input.AddKeyEvent(MoveDown, 115);//s 
+            _input.AddKeyEvent(DetachSword, 113);//q
+            _input.AddKeyEvent(AttachSword, 101);//e
 
             OnUpdate += _input.ReadKey;
             OnUpdate += Orbit;
+            OnStart += CreateSword;
+            OnStart += AttachSword;
+        }
+
+        private void CreateSword()
+        {            
+            TheScene.AddEntity(_sword);
+        }
+
+        private void AttachSword()
+        {
+            AddChild(_sword);
+            _sword.X = 0.5f;
+            _sword.Y = 0.5f;            
+        }
+
+        private void DetachSword()
+        {
+            RemoveChild(_sword);
         }
         
         private void Orbit()

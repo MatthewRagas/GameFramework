@@ -196,7 +196,10 @@ namespace GameFramework
 
         public void AddChild(Entity child)
         {
-            Debug.Assert(child._parent == null);
+            if(child._parent != null)
+            {
+                return;
+            }
 
             child._parent = this;
 
@@ -209,6 +212,7 @@ namespace GameFramework
             if(isMyChild)
             {
                 child._parent = null;
+                child._localTransform = child._globalTransform;
             }
         }
 

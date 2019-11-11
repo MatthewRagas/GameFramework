@@ -15,23 +15,45 @@ namespace GameFramework
 
         public float Width
         {
-            get { return _texture.width; }
+            get { return _texture.width / Game.UnitSize._x; }
         }      
 
         public float Height
         {
-            get { return _texture.height; }
+            get { return _texture.height / Game.UnitSize._y; }
+        }
+
+        public float Top
+        {
+            get { return YAbsolute; }
+        }
+
+        public float Bottom
+        {
+            get { return YAbsolute + Height; }
+        }
+
+        public float Left
+        {
+            get { return XAbsolute; }
+        }
+
+        public float Right
+        {
+            get { return XAbsolute + Width; }
         }
 
         public SpriteEntity()
         {
-
+           
         }
 
         public void Load(string path)
         {
             _image = RL.LoadImage(path);
             _texture = RL.LoadTextureFromImage(_image);
+            X = -Width / 2;
+            Y = -Height / 2;
         }
 
         public Texture2D Texture

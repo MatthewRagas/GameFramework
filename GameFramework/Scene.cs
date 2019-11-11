@@ -30,6 +30,8 @@ namespace GameFramework
 
         private List<Entity>[,] _tracking;
 
+        private bool _started = false;
+
         public Scene() : this(12,6)
         {
            
@@ -58,6 +60,11 @@ namespace GameFramework
             }
         }
 
+        public bool Started
+        {
+            get { return _started; }
+        }
+
         public void Start()
         {
             OnStart?.Invoke();
@@ -65,7 +72,9 @@ namespace GameFramework
             foreach(Entity e in _entities)
             {
                 e.Start();
-            }            
+            }
+
+            _started = true;
         }
 
         public void Update()
@@ -104,8 +113,8 @@ namespace GameFramework
             foreach(Entity e in _entities)
             {                
                 //Set the Entity's collision in the collision grid
-                int x = (int)e.XAbsolute;
-                int y = (int)e.YAbsolute;
+                int x = (int)Math.Round(e.XAbsolute);
+                int y = (int)Math.Round(e.YAbsolute);
                 //Only update if the Entity is within bounds
                 if(x>= 0 && y < _sizeY && y >= 0 && x < _sizeX)
                 {
@@ -137,8 +146,8 @@ namespace GameFramework
 
             foreach (Entity e in _entities)
             {
-                int x = (int)e.XAbsolute;
-                int y = (int)e.YAbsolute;
+                int x = (int)Math.Round(e.XAbsolute);
+                int y = (int)Math.Round(e.YAbsolute);
                 //Position each Entity's icon in the display
                 if (x >= 0 && x < _sizeX && y >= 0 && y < _sizeY)
                 {
@@ -162,9 +171,11 @@ namespace GameFramework
                         }
                         //RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
                         Texture2D texture = e.Sprite.Texture;
-                        Raylib.Vector2 position = new Raylib.Vector2(e.XAbsolute * Game.SizeX - e.OriginX, e.YAbsolute * Game.SizeY - e.OriginY);
-                        float rotation = e.Rotation * (float)(180.0f/Math.PI);
-                        float scale = e.Size;
+                        float positionX = e.Sprite.XAbsolute * Game.UnitSize._x;
+                        float positionY = e.Sprite.YAbsolute * Game.UnitSize._y;
+                        Raylib.Vector2 position = new Raylib.Vector2(positionX, positionY);
+                        float rotation = e.Sprite.Rotation * (float)(180.0f/Math.PI);
+                        float scale = e.Sprite.Size;
                         RL.DrawTextureEx(texture, position, rotation, scale, Color.WHITE);
                     }
                 }
@@ -180,6 +191,10 @@ namespace GameFramework
         //Add an entity
         public void AddEntity(Entity entity)
         {
+            if(_additions.Contains(entity))
+            {
+                return;
+            }
             _additions.Add(entity);
             entity.TheScene = this;
         }
@@ -187,6 +202,10 @@ namespace GameFramework
         //Remove an entity
         public void RemoveEntity(Entity entity)
         {
+            if(_removals.Contains(entity))
+            {
+                return;
+            }
             //Ready the Entity for removal
             _removals.Add(entity);
             entity.TheScene = null;
@@ -210,15 +229,18 @@ namespace GameFramework
             }
             else
             {
-                return false;
+                return true;
             }            
         }
 
         public List<Entity> GetEntities(float x, float y)
         {
-            if (x >= 0 && y >= 0 && x < _sizeX && y < _sizeY)
+            int checkX = (int)Math.Round(x);
+            int checkY = (int)Math.Round(y);
+
+            if (checkX >= 0 && checkY >= 0 && checkX < _sizeX && checkY < _sizeY)
             {
-                return _tracking[(int)x, (int)y];
+                return _tracking[checkX, checkY];
             }
             else
             {
