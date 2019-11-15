@@ -8,8 +8,15 @@ namespace GameFramework
 {
     class Enemy : Entity
     {
-        private Direction _facing;        
-        public float Speed { get; set; } = 0.5f;
+        private Direction _facing;
+
+        private float _speed = 5f;
+
+        public float Speed
+        {
+            get { return _speed; }
+            set { _speed = value; }
+        }        
 
         public Enemy() : this('e', "enemy.png")
         {
@@ -33,29 +40,29 @@ namespace GameFramework
             OnUpdate += TouchPlayer;            
         }
 
-        public void Move()
+        public void Move(float deltaTime)
         {
             switch (_facing)
             {
                 case Direction.North:
-                    MoveUp();
+                    MoveUp(deltaTime);
                     break;
                 case Direction.South:
-                    MoveDown();
+                    MoveDown(deltaTime);
                     break;
                 case Direction.East:
-                    MoveRight();
+                    MoveRight(deltaTime);
                     break;
                 case Direction.West:
-                    MoveLeft();
+                    MoveLeft(deltaTime);
                     break;
             }
 
         }
 
-        private void MoveUp()
+        private void MoveUp(float deltaTime)
         {
-            if (!TheScene.GetCollision(XAbsolute, Sprite.Top - Speed))
+            if (!TheScene.GetCollision(XAbsolute, Sprite.Top - Speed * deltaTime))
             {
                 YVelocity = -Speed;
             }
@@ -66,9 +73,9 @@ namespace GameFramework
             }
         }
 
-        private void MoveDown()
+        private void MoveDown(float deltaTime)
         {
-            if (!TheScene.GetCollision(XAbsolute, Sprite.Bottom + Speed))
+            if (!TheScene.GetCollision(XAbsolute, Sprite.Bottom + Speed * deltaTime))
             {
                 YVelocity = Speed;
             }
@@ -79,9 +86,9 @@ namespace GameFramework
             }
         }
 
-        private void MoveLeft()
+        private void MoveLeft(float deltaTime)
         {
-            if (!TheScene.GetCollision(Sprite.Left - Speed, YAbsolute))
+            if (!TheScene.GetCollision(Sprite.Left - Speed * deltaTime, YAbsolute))
             {
                 XVelocity = Speed;
             }
@@ -92,9 +99,9 @@ namespace GameFramework
             }
         }
 
-        private void MoveRight()
+        private void MoveRight(float deltaTime)
         {
-            if (!TheScene.GetCollision(Sprite.Right + Speed, YAbsolute))
+            if (!TheScene.GetCollision(Sprite.Right + Speed * deltaTime, YAbsolute))
             {
                 XVelocity = Speed;
             }
@@ -105,24 +112,19 @@ namespace GameFramework
             }
         }
 
-        private void TouchPlayer()
+        private void TouchPlayer(float deltaTime)
         {
-            List<Entity> touched;
-            touched = TheScene.GetEntities(X, Y);
+            List<Entity> touched = TheScene.GetEntities(X, Y);            
             bool hit = false;
-            foreach(Entity e in touched)
+            //Check if any of the are Players
+            foreach (Entity e in touched)
             {
                 if(e is Player)
                 {
-                    hit = true;
+                    TheScene.RemoveEntity(this);
                     break;
                 }
-            }
-
-            if(hit)
-            {
-                TheScene.RemoveEntity(this);
-            }
+            }                                                    
         }
     }
 }

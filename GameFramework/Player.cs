@@ -12,6 +12,12 @@ namespace GameFramework
 
         private PlayerInput _input = new PlayerInput();
         private Entity _sword = new Entity('/', "sword0.png");
+
+        public Entity Sword
+        {
+            get { return _sword; }
+        }
+
         public Player() : this('@', "survivor-idle_handgun_0.png")
         {
 
@@ -45,28 +51,40 @@ namespace GameFramework
         private void CreateSword()
         {            
             TheScene.AddEntity(_sword);
+            _sword.X = X;
+            _sword.Y = Y;
         }
 
         private void AttachSword()
         {
+            //if(_sword.TheScene != TheScene || GetDistance(_sword) > 1)
+            if(!Hitbox.Overlaps(_sword.Hitbox))
+            {
+                return;
+            }
+
             AddChild(_sword);
             _sword.X = 0.5f;
-            _sword.Y = 0.5f;            
+            _sword.Y = 0.5f;
         }
 
         private void DetachSword()
         {
+            if (_sword.TheScene != TheScene)
+            {
+                return;
+            }
             RemoveChild(_sword);
         }
         
-        private void Orbit()
+        private void Orbit(float deltaTime)
         {
             foreach(Entity child in _children)
             {
-                child.Rotate(1.0f);
+                //child.Rotate(1.0f);
             }
 
-            Rotate(0.5f);
+            Rotate(0.5f * deltaTime);
         }
 
         private void MoveRight()
@@ -150,6 +168,15 @@ namespace GameFramework
             if(destination == null)
             {
                 return;
+            }
+
+            //If the Player is holding the sword
+            if(_sword.Parent == this)
+            {
+                //Remove the sword from the current Room
+                TheScene.RemoveEntity(_sword);
+                //Add the sword to the current Room
+                TheScene.AddEntity(_sword);
             }
 
             TheScene.RemoveEntity(this);

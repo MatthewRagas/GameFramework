@@ -11,12 +11,13 @@ namespace GameFramework
 {
 
     delegate void Event();
+    delegate void UpdateEvent(float deltaTime);
 
     class Entity
     {
 
         public Event OnStart;
-        public Event OnUpdate;
+        public UpdateEvent OnUpdate;
         public Event OnDraw;
 
 
@@ -35,6 +36,16 @@ namespace GameFramework
         private Matrix3 _localTransform = new Matrix3();
         private Matrix3 _globalTransform = new Matrix3();
 
+        public AABB Hitbox { get; set; }
+
+        private List<Entity> _entities;
+        //Whether this Entity's Start method has been called
+        private bool _started = false;
+
+        public bool Started
+        {
+            get { return _started; }
+        }
         public char Icon { get; set; } = ' ';
         //The image representing the Entity on the screen
         public SpriteEntity Sprite { get; set; }
@@ -44,6 +55,7 @@ namespace GameFramework
         //Entity's relative origin
         public float OriginX { get; set; } = 0;
         public float OriginY { get; set; } = 0;
+        
 
         public float X
         {
@@ -155,10 +167,12 @@ namespace GameFramework
 
         public Entity()
         {
-
+            Hitbox = new AABB(
+               new Vector3(XAbsolute - 0.5f, YAbsolute - 0.5f, 1),
+               new Vector3(XAbsolute + 0.5f, YAbsolute + 0.5f, 1));
         }
 
-        public Entity(char icon)
+        public Entity(char icon) : this()
         {
             Icon = icon;
         }
@@ -245,24 +259,35 @@ namespace GameFramework
             }
         }
 
+        public float GetDistance(Entity other)
+        {
+            Vector3 position = new Vector3(XAbsolute, YAbsolute, 1);
+            Vector3 otherPosition = new Vector3(other.XAbsolute, other.YAbsolute, 1);
+
+            return position.Distance(otherPosition);
+        }
+
         public void Start()
         {
             OnStart?.Invoke();
+            _started = true;           
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
+            OnUpdate?.Invoke(deltaTime);
             //_location += _velocity;
             //Matrix3 transform = _translation * _rotation;
             //_location = transform * _location;
-            X += _velocity._x;
-            Y += _velocity._y;
-            OnUpdate?.Invoke();
+            X += _velocity._x * deltaTime;
+            Y += _velocity._y * deltaTime;
+            Hitbox.Move( new Vector3(XAbsolute, YAbsolute, 1));
         }
 
         public void Draw()
         {
             OnDraw?.Invoke();
+            Hitbox.Draw(Raylib.Color.LIME);
         }
     }
 }

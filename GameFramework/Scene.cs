@@ -77,7 +77,7 @@ namespace GameFramework
             _started = true;
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
             OnUpdate?.Invoke();
 
@@ -131,7 +131,7 @@ namespace GameFramework
             foreach (Entity e in _entities)
             {
                 //Call the Entity's Update events
-                e.Update();
+                e.Update(deltaTime);
             }            
         }
 
@@ -171,10 +171,10 @@ namespace GameFramework
                         }
                         //RL.DrawTexture(e.Sprite, (int)(e.X * Game.SizeX),  (int)(e.Y *Game.SizeY), Color.WHITE);
                         Texture2D texture = e.Sprite.Texture;
-                        float positionX = e.Sprite.XAbsolute * Game.UnitSize._x;
-                        float positionY = e.Sprite.YAbsolute * Game.UnitSize._y;
+                        float positionX = e.Sprite.XAbsolute * Game.UnitSize._x + Game.UnitSize._x / 2;
+                        float positionY = e.Sprite.YAbsolute * Game.UnitSize._y + Game.UnitSize._y / 2;
                         Raylib.Vector2 position = new Raylib.Vector2(positionX, positionY);
-                        float rotation = e.Sprite.Rotation * (float)(180.0f/Math.PI);
+                        float rotation = e.Rotation * (float)(180.0f/Math.PI);
                         float scale = e.Sprite.Size;
                         RL.DrawTextureEx(texture, position, rotation, scale, Color.WHITE);
                     }

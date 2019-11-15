@@ -114,6 +114,20 @@ namespace GameFramework
             Vector3 b = other.GetNormalised();            
 
             return (float)Math.Acos(a.DotProduct(b));
-        }       
+        }
+
+        public static Vector3 Min (Vector3 a, Vector3 b)
+        {
+            return new Vector3(Math.Min(a._x, b._x), Math.Min(a._y, b._y), Math.Min(a._z, b._z));
+        }
+
+        public static Vector3 Max(Vector3 a, Vector3 b)
+        {
+            return new Vector3(Math.Max(a._x, b._x), Math.Max(a._y, b._y), Math.Max(a._z, b._z));
+        }
+        public static Vector3 Clamp(Vector3 t, Vector3 a, Vector3 b)
+        {
+            return Max(a, Min(b, t));
+        }
     }
 }

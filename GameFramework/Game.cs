@@ -20,10 +20,14 @@ namespace GameFramework
 
         private static Scene _currentScene;
         private static Scene _nextScene;
+
+        private Timer _gameTimer;
         public Game()
         {
             RL.InitWindow(800, 550, "Shalom");
             RL.SetTargetFPS(15);
+
+            _gameTimer = new Timer();
         }
 
         public static Scene CurrentScene
@@ -67,7 +71,7 @@ namespace GameFramework
                     _currentScene = _nextScene;                    
                 }
 
-                _currentScene.Update();
+                _currentScene.Update(_gameTimer.GetDeltaTime());
 
                 if (!_currentScene.Started)
                 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GameFramework
 {
     class Program
@@ -86,6 +87,6 @@ namespace GameFramework
             Console.WriteLine(c * new Vector3(2, 4, 6));
 
             Console.WriteLine(a * new Matrix3());
-        }
+        }        
     }
 }

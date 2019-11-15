@@ -25,12 +25,12 @@ namespace GameFramework
 
         public float Top
         {
-            get { return YAbsolute; }
+            get { return YAbsolute + 0.5f; }
         }
 
         public float Bottom
         {
-            get { return YAbsolute + Height; }
+            get { return YAbsolute + Height + 0.5f; }
         }
 
         public float Left
